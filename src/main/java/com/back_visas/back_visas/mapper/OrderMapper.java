@@ -11,11 +11,12 @@ public interface OrderMapper {
     // de requestDTO a entidad
     @Mapping(target = "idOrder", ignore = true)
     @Mapping(target = "totalPrice", ignore = true)
-    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "creationDatetime", ignore = true)
     @Mapping(target = "paymentId", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "coupon", ignore = true)
     @Mapping(target = "service", ignore = true)
+    @Mapping(source = "requestedQuantity", target = "quantity")
     Order toEntity(OrderRequestDTO dto);
 
     // de entidad a responseDTO
