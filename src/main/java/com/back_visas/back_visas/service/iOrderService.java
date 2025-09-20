@@ -11,7 +11,7 @@ import java.util.Map;
 public interface iOrderService {
     public List<OrderResponseDTO> getOrders();
     public OrderResponseDTO getOrder(Long idOrder);
-    public OrderResponseDTO createOrder(OrderRequestDTO dto, int requestedQuantity);
+    public OrderResponseDTO createOrder(OrderRequestDTO dto);
     public Order changeStatus(Long idOrder, OrderStatus status);
     void handleMercadoPagoWebhook(Map<String, Object> payload);
 }
