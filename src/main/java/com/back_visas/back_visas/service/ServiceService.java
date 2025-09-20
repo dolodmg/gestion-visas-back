@@ -34,8 +34,17 @@ public class ServiceService implements iServiceService {
     public com.back_visas.back_visas.model.Service updateService(Long idService, com.back_visas.back_visas.model.Service serviceDetails) {
         com.back_visas.back_visas.model.Service service = serviceRepository.findById(idService)
                 .orElseThrow(() -> new RuntimeException("No se encontró ese servicio"));
+
         service.setServiceName(serviceDetails.getServiceName());
         service.setPricePerPerson(serviceDetails.getPricePerPerson());
+        service.setAllowsVariableQuantity(serviceDetails.isAllowsVariableQuantity());
+        service.setFixedQuantity(serviceDetails.getFixedQuantity());
+
+        // Validación: si no permite cantidad variable, fixedQuantity es 1
+        if (!service.isAllowsVariableQuantity() && service.getFixedQuantity() != 1) {
+            throw new IllegalArgumentException("Los servicios con cantidad fija deben tener fixedQuantity = 1");
+        }
+
         return serviceRepository.save(service);
     }
 
