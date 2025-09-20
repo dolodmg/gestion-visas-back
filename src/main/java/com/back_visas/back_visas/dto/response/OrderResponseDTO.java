@@ -20,4 +20,5 @@ public class OrderResponseDTO {
     private Double totalPrice;
     private LocalDateTime creationDate;
     private String status;
+    private String couponCode;
 }

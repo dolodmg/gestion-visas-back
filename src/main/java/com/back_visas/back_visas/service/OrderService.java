@@ -46,19 +46,19 @@ public class OrderService implements iOrderService {
     }
 
     @Override
-    public OrderResponseDTO createOrder(OrderRequestDTO dto, int requestedQuantity) {
+    public OrderResponseDTO createOrder(OrderRequestDTO dto) {
         Order order = orderMapper.toEntity(dto);
         com.back_visas.back_visas.model.Service service = serviceRepository.findById(dto.getIdService())
                 .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
         order.setService(service);
 
         // VALIDACIÓN DE QUANTITY
-        if (!service.isAllowsVariableQuantity() && requestedQuantity != 1) {
+        if (!service.isAllowsVariableQuantity() && dto.getRequestedQuantity() != 1) {
             throw new InvalidQuantityException("El servicio " + service.getServiceName() + " solo permite cantidad de 1");
         }
 
         // Establecer la quantity validada
-        order.setQuantity(requestedQuantity);
+        order.setQuantity(dto.getRequestedQuantity());
 
         if (dto.getCouponCode() != null) {
             couponRepository.findByCouponCodeAndExpirationDateAfter(
@@ -66,7 +66,7 @@ public class OrderService implements iOrderService {
             ).ifPresent(order::setCoupon);
         }
 
-        Double total = service.getPricePerPerson() * requestedQuantity;
+        Double total = service.getPricePerPerson() * dto.getRequestedQuantity();
         if (order.getCoupon() != null) {
             total = total * (1 - order.getCoupon().getDiscount() / 100.0);
         }
@@ -192,7 +192,6 @@ public class OrderService implements iOrderService {
         }
         return null;
     }
-}
 
     private OrderStatus mapMercadoPagoStatusToOrderStatus(String mpStatus) {
         return switch (mpStatus.toLowerCase()) {
