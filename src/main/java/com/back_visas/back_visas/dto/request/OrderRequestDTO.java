@@ -1,5 +1,6 @@
 package com.back_visas.back_visas.dto.request;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +15,7 @@ public class OrderRequestDTO {
     private String customerLastname;
     private String customerMail;
     private String customerPhone;
+    @Nullable
     private String couponCode;
     private int requestedQuantity;
 }

@@ -1,5 +1,6 @@
 package com.back_visas.back_visas.dto.response;
 
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,6 @@ public class OrderResponseDTO {
     private Double totalPrice;
     private LocalDateTime creationDate;
     private String status;
+    @Nullable
     private String couponCode;
 }
