@@ -17,4 +17,6 @@ public class Service {
     private Long idService;
     private String serviceName;
     private Double pricePerPerson;
+    private boolean allowsVariableQuantity = false;
+    private int fixedQuantity = 1;
 }
