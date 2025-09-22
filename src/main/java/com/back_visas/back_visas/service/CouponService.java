@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CouponService implements iCouponService {
@@ -44,4 +45,11 @@ public class CouponService implements iCouponService {
         coupon.setActive(!coupon.isActive());
         couponRepository.save(coupon);
     }
+
+    @Override
+    public Coupon getCouponByCode(String couponCode) {
+        return couponRepository.findCouponByCouponCodeIgnoreCase(couponCode)
+                .orElse(null);
+    }
+
 }

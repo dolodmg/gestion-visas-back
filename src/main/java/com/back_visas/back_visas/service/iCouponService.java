@@ -10,4 +10,5 @@ public interface iCouponService {
     public void createCoupon(Coupon coupon);
     public void deleteCoupon(Long idCoupon);
     public void toggleActive(Long idCoupon);
+    public Coupon getCouponByCode(String couponCode);
 }

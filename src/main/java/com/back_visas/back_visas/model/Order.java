@@ -1,5 +1,6 @@
 package com.back_visas.back_visas.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,5 +29,6 @@ public class Order {
     private OrderStatus status;
     @ManyToOne
     @JoinColumn(name = "id_coupon")
+    @Nullable
     private Coupon coupon;
 }

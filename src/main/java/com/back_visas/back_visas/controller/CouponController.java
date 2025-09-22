@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/coupon")
+@RequestMapping("/api/coupons")
 public class CouponController {
     private final CouponService couponService;
 
@@ -25,6 +25,12 @@ public class CouponController {
     @GetMapping("/{idCoupon}")
     public ResponseEntity<Coupon> getCoupon(@PathVariable Long idCoupon) {
         Coupon coupon = couponService.getCoupon(idCoupon);
+        return ResponseEntity.ok(coupon);
+    }
+
+    @GetMapping("/code/{couponCode}")
+    public ResponseEntity<Coupon> getCouponByCode(@PathVariable String couponCode) {
+        Coupon coupon = couponService.getCouponByCode(couponCode);
         return ResponseEntity.ok(coupon);
     }
 

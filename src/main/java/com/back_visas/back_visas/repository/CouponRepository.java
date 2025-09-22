@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Optional<Coupon> findByCouponCodeAndExpirationDateAfter(String couponCode, LocalDate date);
+    Optional<Coupon> findCouponByCouponCodeIgnoreCase(String couponCode);
 }
