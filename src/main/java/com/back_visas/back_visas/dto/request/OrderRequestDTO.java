@@ -18,4 +18,5 @@ public class OrderRequestDTO {
     @Nullable
     private String couponCode;
     private int requestedQuantity;
+    private Double totalPrice;
 }
