@@ -19,8 +19,11 @@ public class OrderResponseDTO {
     private String customerMail;
     private String customerPhone;
     private Double totalPrice;
+    private Double totalPriceArs;
     private LocalDateTime creationDatetime;
     private String status;
     @Nullable
     private String couponCode;
+    private String externalReference;
+    private String paymentId;
 }

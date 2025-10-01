@@ -5,18 +5,24 @@ import com.back_visas.back_visas.dto.response.OrderResponseDTO;
 import com.back_visas.back_visas.exception.InvalidQuantityException;
 import com.back_visas.back_visas.feign.MercadoPagoAPIClient;
 import com.back_visas.back_visas.mapper.OrderMapper;
+import com.back_visas.back_visas.model.Coupon;
 import com.back_visas.back_visas.model.Order;
 import com.back_visas.back_visas.model.OrderStatus;
 import com.back_visas.back_visas.repository.CouponRepository;
 import com.back_visas.back_visas.repository.OrderRepository;
 import com.back_visas.back_visas.repository.ServiceRepository;
+import org.aspectj.weaver.ast.Or;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OrderService implements iOrderService {
@@ -26,23 +32,30 @@ public class OrderService implements iOrderService {
     private final OrderMapper orderMapper;
 
     private final MercadoPagoAPIClient mercadoPagoAPIClient;
+    private final CurrencyService currencyService;
 
-    public OrderService(OrderRepository orderRepository, ServiceRepository serviceRepository, CouponRepository couponRepository, OrderMapper orderMapper, MercadoPagoAPIClient mercadoPagoAPIClient) {
+    public OrderService(OrderRepository orderRepository, ServiceRepository serviceRepository, CouponRepository couponRepository, OrderMapper orderMapper, MercadoPagoAPIClient mercadoPagoAPIClient, CurrencyService currencyService) {
         this.orderRepository = orderRepository;
         this.serviceRepository = serviceRepository;
         this.couponRepository = couponRepository;
         this.orderMapper = orderMapper;
         this.mercadoPagoAPIClient = mercadoPagoAPIClient;
+        this.currencyService = currencyService;
     }
 
     @Override
     public List<OrderResponseDTO> getOrders() {
-        return null;
+       List<Order> orders = orderRepository.findAll();
+       return orders.stream()
+               .map(orderMapper::toDto)
+               .toList();
     }
 
     @Override
     public OrderResponseDTO getOrder(Long idOrder) {
-        return null;
+        Order order = orderRepository.findById(idOrder)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró una orden con ID " + idOrder));
+        return orderMapper.toDto(order);
     }
 
     @Override
@@ -51,7 +64,7 @@ public class OrderService implements iOrderService {
         com.back_visas.back_visas.model.Service service = serviceRepository.findById(dto.getIdService())
                 .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
         order.setService(service);
-
+        order.setExternalReference(UUID.randomUUID().toString());
         // VALIDACIÓN DE QUANTITY
         if (!service.isAllowsVariableQuantity() && dto.getRequestedQuantity() != 1) {
             throw new InvalidQuantityException("El servicio " + service.getServiceName() + " solo permite cantidad de 1");
@@ -73,9 +86,34 @@ public class OrderService implements iOrderService {
 
         order.setTotalPrice(total);
         order.setCreationDatetime(LocalDateTime.now());
-        order.setStatus(OrderStatus.PENDIENTE);
+        order.setStatus(OrderStatus.PENDING);
         orderRepository.save(order);
-        return orderMapper.toDto(order);
+        BigDecimal totalArs = currencyService.convertUsdToArs(BigDecimal.valueOf(total));
+        OrderResponseDTO orderDTO = orderMapper.toDto(order);
+        orderDTO.setTotalPriceArs(totalArs.doubleValue());
+        return orderDTO;
+    }
+
+    @Override
+    public OrderResponseDTO updateOrder(Long idOrder, OrderRequestDTO orderDTO) {
+        Order order = orderRepository.findById(idOrder)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró el orden con ID " + idOrder));
+        order.setCustomerName(orderDTO.getCustomerName());
+        order.setCustomerLastname(orderDTO.getCustomerLastname());
+        order.setCustomerMail(orderDTO.getCustomerMail());
+        order.setCustomerPhone(orderDTO.getCustomerPhone());
+        order.setQuantity(orderDTO.getRequestedQuantity());
+        order.setTotalPrice(orderDTO.getTotalPrice());
+        if (orderDTO.getCouponCode() != null) {
+            Coupon coupon = couponRepository.findCouponByCouponCodeIgnoreCase(orderDTO.getCouponCode())
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "No se encontró el cupón con código " + orderDTO.getCouponCode()
+                    ));
+            order.setCoupon(coupon);
+        }
+        Order updated = orderRepository.save(order);
+        return orderMapper.toDto(updated);
     }
 
     @Override
@@ -91,7 +129,7 @@ public class OrderService implements iOrderService {
     }
 
     private void validateStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
-        if (currentStatus == OrderStatus.APROBADA && newStatus == OrderStatus.PENDIENTE) {
+        if (currentStatus == OrderStatus.PAID && newStatus == OrderStatus.PENDING) {
             throw new IllegalStateException("No se puede cambiar de APROBADA a PENDIENTE");
         }
     }
@@ -195,9 +233,9 @@ public class OrderService implements iOrderService {
 
     private OrderStatus mapMercadoPagoStatusToOrderStatus(String mpStatus) {
         return switch (mpStatus.toLowerCase()) {
-            case "approved" -> OrderStatus.APROBADA;
-            case "rejected" -> OrderStatus.RECHAZADA;
-            default -> OrderStatus.PENDIENTE;
+            case "approved" -> OrderStatus.PAID;
+            case "rejected" -> OrderStatus.CANCELLED;
+            default -> OrderStatus.PENDING;
         };
     }
 }
