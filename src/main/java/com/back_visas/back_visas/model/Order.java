@@ -33,6 +33,8 @@ public class Order {
     private LocalDateTime creationDatetime;
     private LocalDateTime updatedAt;
     private String paymentId;
+    private boolean includeVideocall = false;
+    private Double videocallPrice;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
     @ManyToOne
