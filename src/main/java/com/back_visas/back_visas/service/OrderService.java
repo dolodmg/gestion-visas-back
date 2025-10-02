@@ -73,6 +73,8 @@ public class OrderService implements iOrderService {
         // Establecer la quantity validada
         order.setQuantity(dto.getRequestedQuantity());
 
+        order.setIncludeVideocall(dto.isIncludeVideocall());
+
         if (dto.getCouponCode() != null) {
             couponRepository.findByCouponCodeAndExpirationDateAfter(
                     dto.getCouponCode(), LocalDate.now()
@@ -80,6 +82,12 @@ public class OrderService implements iOrderService {
         }
 
         Double total = service.getPricePerPerson() * dto.getRequestedQuantity();
+
+        final double VIDEOCALL_PRICE = 10.00;
+        if (dto.isIncludeVideocall()) {
+            total += VIDEOCALL_PRICE;
+            order.setVideocallPrice(VIDEOCALL_PRICE);
+        }
         if (order.getCoupon() != null) {
             total = total * (1 - order.getCoupon().getDiscount() / 100.0);
         }

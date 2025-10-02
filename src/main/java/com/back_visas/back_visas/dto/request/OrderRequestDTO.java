@@ -19,4 +19,5 @@ public class OrderRequestDTO {
     private String couponCode;
     private int requestedQuantity;
     private Double totalPrice;
+    private boolean includeVideocall;
 }
