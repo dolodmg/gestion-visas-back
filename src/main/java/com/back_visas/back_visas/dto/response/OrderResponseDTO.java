@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor @NoArgsConstructor
 public class OrderResponseDTO {
     private Long idOrder;
+    private Long idService;
     private String serviceName;
     private int quantity;
     private String customerName;

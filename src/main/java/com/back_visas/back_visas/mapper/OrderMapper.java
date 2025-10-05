@@ -21,6 +21,7 @@ public interface OrderMapper {
 
     // de entidad a responseDTO
     @Mapping(source = "service.serviceName", target = "serviceName")
+    @Mapping(source = "service.idService", target = "idService")
     @Mapping(source = "coupon.couponCode", target = "couponCode")
     OrderResponseDTO toDto(Order order);
 }

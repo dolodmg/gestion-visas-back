@@ -336,22 +336,40 @@ public class MercadoPagoService implements iMercadoPagoService {
     }
 
     public Map<String, Object> verifyPayment(Long paymentId) {
-        Payment payment = paymentRepository.findByMercadoPagoPaymentId(paymentId)
-                .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
+        Optional<Payment> paymentOpt = paymentRepository.findByMercadoPagoPaymentId(paymentId);
+
+        if (paymentOpt.isPresent()) {
+            Payment payment = paymentOpt.get();
+            return Map.of(
+                    "paymentId", payment.getMercadoPagoPaymentId(),
+                    "status", payment.getStatus().name(),
+                    "statusDetail", payment.getStatusDetail() != null ? payment.getStatusDetail() : "",
+                    "amount", payment.getAmount(),
+                    "payerEmail", payment.getPayerEmail() != null ? payment.getPayerEmail() : "",
+                    "idOrder", payment.getOrder().getIdOrder(),
+                    "idService", payment.getOrder().getService().getIdService()
+            );
+        }
 
         Map<String, Object> mpResponse = mercadoPagoAPIClient.getPayment(paymentId);
+        String externalReference = (String) mpResponse.get("external_reference");
 
+        Order order = orderRepository.findByExternalReference(externalReference)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        Payment payment = new Payment(order, order.getTotalPrice(), null);
+        payment.setMercadoPagoPaymentId(paymentId);
         payment.updateFromMercadoPagoResponse(mpResponse);
         paymentRepository.save(payment);
 
         return Map.of(
                 "paymentId", payment.getMercadoPagoPaymentId(),
                 "status", payment.getStatus().name(),
-                "statusDetail", payment.getStatusDetail(),
+                "statusDetail", payment.getStatusDetail() != null ? payment.getStatusDetail() : "",
                 "amount", payment.getAmount(),
-                "payerEmail", payment.getPayerEmail(),
-                "idOrder", payment.getOrder().getIdOrder(),
-                "idService", payment.getOrder().getService().getIdService()
+                "payerEmail", payment.getPayerEmail() != null ? payment.getPayerEmail() : "",
+                "idOrder", order.getIdOrder(),
+                "idService", order.getService().getIdService()
         );
     }
 }
