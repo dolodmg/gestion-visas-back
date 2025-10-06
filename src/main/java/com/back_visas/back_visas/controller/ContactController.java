@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/contact")
 public class ContactController {
 
-    @Value("${MAIL}")
+    @Value("${spring.mail.username}")
     private String fromMail;
 
     private final JavaMailSender mailSender;
