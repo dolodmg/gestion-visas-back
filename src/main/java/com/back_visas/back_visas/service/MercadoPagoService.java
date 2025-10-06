@@ -89,9 +89,9 @@ public class MercadoPagoService implements iMercadoPagoService {
 
         // Back URLs
         Map<String, String> backUrls = new HashMap<>();
-        backUrls.put("success", frontProtocol + "://" + urlNotification + "/payment/success?order=" + order.getIdOrder());
-        backUrls.put("failure", frontProtocol + "://" + urlNotification  + "/payment/failure?order=" + order.getIdOrder());
-        backUrls.put("pending", frontProtocol + "://" + urlNotification + "/payment/pending?order=" + order.getIdOrder());
+        backUrls.put("success", urlNotification + "/payment/success?order=" + order.getIdOrder());
+        backUrls.put("failure", urlNotification  + "/payment/failure?order=" + order.getIdOrder());
+        backUrls.put("pending", urlNotification + "/payment/pending?order=" + order.getIdOrder());
         preference.put("back_urls", backUrls);
 
         preference.put("external_reference", request.getExternalReference());
