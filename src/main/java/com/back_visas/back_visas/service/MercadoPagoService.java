@@ -89,14 +89,14 @@ public class MercadoPagoService implements iMercadoPagoService {
 
         // Back URLs
         Map<String, String> backUrls = new HashMap<>();
-        backUrls.put("success", urlNotification + "/payment/success?order=" + order.getIdOrder());
-        backUrls.put("failure", urlNotification  + "/payment/failure?order=" + order.getIdOrder());
-        backUrls.put("pending", urlNotification + "/payment/pending?order=" + order.getIdOrder());
+        backUrls.put("success", frontDomain + "/payment/success?order=" + order.getIdOrder());
+        backUrls.put("failure", frontDomain  + "/payment/failure?order=" + order.getIdOrder());
+        backUrls.put("pending", frontDomain + "/payment/pending?order=" + order.getIdOrder());
         preference.put("back_urls", backUrls);
 
         preference.put("external_reference", request.getExternalReference());
         preference.put("auto_return", "approved");
-        preference.put("notification_url", "https://" + urlNotification + "/api/mercadopago/webhook");
+        preference.put("notification_url", urlNotification + "/api/mercadopago/webhook");
 
         // Payer info
         Map<String, String> payer = new HashMap<>();
@@ -265,9 +265,9 @@ public class MercadoPagoService implements iMercadoPagoService {
 
         // URLs de retorno
         Map<String, String> backUrls = new HashMap<>();
-        backUrls.put("success", "https://" + frontDomain + "/payment/success?order_id=" + order.getIdOrder());
-        backUrls.put("failure", "https://" + frontDomain + "/payment/failure?order_id=" + order.getIdOrder());
-        backUrls.put("pending", "https://" + frontDomain + "/payment/pending?order_id=" + order.getIdOrder());
+        backUrls.put("success", frontDomain + "/payment/success?order_id=" + order.getIdOrder());
+        backUrls.put("failure", frontDomain + "/payment/failure?order_id=" + order.getIdOrder());
+        backUrls.put("pending", frontDomain + "/payment/pending?order_id=" + order.getIdOrder());
         preference.put("back_urls", backUrls);
         preference.put("auto_return", "approved");
 
