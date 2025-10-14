@@ -14,7 +14,7 @@ WORKDIR /app
 
 COPY --from=builder /app/target/*.jar app.jar
 
-ENV PORT=10000
-EXPOSE ${PORT}
+# Expone directamente el puerto por defecto de Spring Boot
+EXPOSE 8080
 
 ENTRYPOINT ["java","-jar","app.jar"]
