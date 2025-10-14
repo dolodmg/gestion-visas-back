@@ -14,20 +14,13 @@ import java.util.stream.Collectors;
 @Controller
 public class PaymentRedirectController {
 
-    @Value("${front.protocol}")
-    private String frontProtocol;
-
     @Value("${front.domain}")
-    private String frontDomain;
-
     private String frontUrl;
 
     @PostConstruct
     public void init() {
-        frontUrl = frontProtocol + "://" + frontDomain;
         System.out.println("🌍 FRONT URL = " + frontUrl);
     }
-
 
     @GetMapping("/payment/success")
     public String redirectSuccess(@RequestParam Map<String,String> params) {

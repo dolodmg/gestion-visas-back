@@ -25,9 +25,6 @@ public class MercadoPagoService implements iMercadoPagoService {
     @Value("${front.domain}")
     private String frontDomain;
 
-    @Value("${front.protocol}")
-    private String frontProtocol;
-
     @Value("${webhook.url}")
     private String urlNotification;
 
