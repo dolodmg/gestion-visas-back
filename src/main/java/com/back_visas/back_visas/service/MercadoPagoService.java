@@ -28,8 +28,14 @@ public class MercadoPagoService implements iMercadoPagoService {
     @Value("${webhook.url}")
     private String urlNotification;
 
-    @Value("${template.id}")
-    private String templateId;
+    @Value("${template.id.usa}")
+    private String templateIdUsa;
+
+    @Value("${template.id.ca}")
+    private String templateIdCanada;
+
+    @Value("${template.id.eta}")
+    private String templateIdEta;
 
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
@@ -202,6 +208,7 @@ public class MercadoPagoService implements iMercadoPagoService {
                     MailRequestDTO mailDto = new MailRequestDTO();
                     mailDto.setNameTo(order.getCustomerName());
                     mailDto.setTo(order.getCustomerMail());
+                    String templateId = getTemplateIdForService(order.getService());
                     mailDto.setTemplateId(templateId);
                     mailDto.setFirstName(order.getCustomerName());
                     mailDto.setServiceName(order.getService().getServiceName());
@@ -368,5 +375,21 @@ public class MercadoPagoService implements iMercadoPagoService {
                 "idOrder", order.getIdOrder(),
                 "idService", order.getService().getIdService()
         );
+    }
+
+    private String getTemplateIdForService(com.back_visas.back_visas.model.Service service) {
+        String serviceName = service.getServiceName().toLowerCase();
+
+        // Identificar por nombre del servicio
+        if (serviceName.contains("eta")) {
+            return templateIdEta;
+        } else if (serviceName.contains("canadá") || serviceName.contains("canada")) {
+            return templateIdCanada;
+        } else if (serviceName.contains("usa") || serviceName.contains("eeuu") || serviceName.contains("estados unidos")) {
+            return templateIdUsa;
+        }
+
+        // Fallback: usar template USA por defecto
+        return templateIdUsa;
     }
 }
