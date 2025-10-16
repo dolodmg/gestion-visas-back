@@ -13,4 +13,5 @@ public interface iMercadoPagoService {
 
     public void handleWebhook(String body, Map<String, String> headers) throws Exception;
     public Map<String, Object> verifyPayment(Long paymentId) throws Exception;
+    public String getTemplateIdForService(com.back_visas.back_visas.model.Service service);
 }

@@ -377,7 +377,7 @@ public class MercadoPagoService implements iMercadoPagoService {
         );
     }
 
-    private String getTemplateIdForService(com.back_visas.back_visas.model.Service service) {
+    public String getTemplateIdForService(com.back_visas.back_visas.model.Service service) {
         String serviceName = service.getServiceName().toLowerCase();
 
         // Identificar por nombre del servicio

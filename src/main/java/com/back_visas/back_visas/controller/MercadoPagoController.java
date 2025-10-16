@@ -24,9 +24,6 @@ public class MercadoPagoController {
     private final MailService mailService;
     private final OrderRepository orderRepository;
 
-    @Value("${template.id}")
-    private String templateId;
-
     public MercadoPagoController(MercadoPagoService mercadoPagoService, MailService mailService, OrderRepository orderRepository) {
         this.mercadoPagoService = mercadoPagoService;
         this.mailService = mailService;
@@ -106,7 +103,7 @@ public class MercadoPagoController {
             MailRequestDTO mailDto = new MailRequestDTO();
             mailDto.setNameTo(order.getCustomerName());
             mailDto.setTo(order.getCustomerMail());
-            mailDto.setTemplateId(templateId);
+            mailDto.setTemplateId(mercadoPagoService.getTemplateIdForService(order.getService()));
             mailDto.setFirstName(order.getCustomerName());
             mailDto.setServiceName(order.getService().getServiceName());
             mailDto.setIdOrder(order.getIdOrder().toString());
