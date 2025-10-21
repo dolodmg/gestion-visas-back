@@ -15,9 +15,17 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(allowedOrigins.split(","))
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedOriginPatterns(
+                                "http://localhost*",
+                                "http://127.0.0.1*",
+                                "https://argenvisa.online*",
+                                "https://*.mercadopago.com",
+                                "https://*.mercadolibre.com",
+                                "https://api.mercadopago.com"
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                         .allowedHeaders("*")
+                        .exposedHeaders("Authorization", "X-Total-Count")
                         .allowCredentials(true)
                         .maxAge(3600);
             }
