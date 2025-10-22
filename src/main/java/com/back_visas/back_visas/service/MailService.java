@@ -23,15 +23,19 @@ public class MailService {
 
     @Value("${mailersend.sender}")
     private String sender;
+
+    @Value("${mailersend.reply.to}")
+    private String reply_to;
+
     String senderName = "ArgenVisa";
 
     private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
     public void sendMailWithTemplate(MailRequestDTO mailRequest) throws MailerSendException {
-        logger.info("📧 Intentando enviar email a: '{}' <{}>", mailRequest.getNameTo(), mailRequest.getTo());
+        logger.info("Intentando enviar email a: '{}' <{}>", mailRequest.getNameTo(), mailRequest.getTo());
 
         if (sender == null || sender.trim().isEmpty()) {
-            throw new IllegalStateException("❌ El email del remitente no está configurado");
+            throw new IllegalStateException("El email del remitente no está configurado");
         }
 
         MailerSend ms = new MailerSend();
@@ -41,8 +45,7 @@ public class MailService {
         email.setFrom(senderName, sender.trim());
         email.setSubject("Confirmación de tu orden - ArgenVisa");
         email.setTemplateId(mailRequest.getTemplateId());
-
-        // Agregar destinatario
+        email.setInReplyTo(reply_to);
         email.addRecipient(mailRequest.getNameTo(), mailRequest.getTo());
 
         // Variables para la plantilla
@@ -55,16 +58,15 @@ public class MailService {
         variables.put("quantity", mailRequest.getQuantity() != 0 ? mailRequest.getQuantity() : "1");
         variables.put("couponCode", mailRequest.getCouponCode() != null ? mailRequest.getCouponCode() : "Sin cupón");
 
-        // Agregar las variables **una por una**
         for (Map.Entry<String, Object> entry : variables.entrySet()) {
             email.addPersonalization(entry.getKey(), entry.getValue());
         }
 
         try {
             MailerSendResponse response = ms.emails().send(email);
-            logger.info("✅ Correo enviado exitosamente. Message ID: {}", response.messageId);
+            logger.info(" Correo enviado exitosamente. Message ID: {}", response.messageId);
         } catch (MailerSendException e) {
-            logger.error("❌ Error al enviar el correo: {}", e.getMessage(), e);
+            logger.error("Error al enviar el correo: {}", e.getMessage(), e);
             throw e;
         }
     }
