@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de tu orden - ArgenVisa</title>
+
+    <!--[if !mso]><!-->
+    <style type="text/css">
+@import url('https://fonts.mailersend.com/css?family=Inter:400,600');
+    </style>
+    <!--<![endif]-->
+
+    <style type="text/css" rel="stylesheet" media="all">
+@media only screen and (max-width: 640px) {
+        .ms-header {
+            display: none !important;
+        }
+        .ms-content {
+            width: 100% !important;
+            border-radius: 0;
+        }
+        .ms-content-body {
+            padding: 30px !important;
+        }
+        .ms-footer {
+            width: 100% !important;
+        }
+        .mobile-wide {
+            width: 100% !important;
+        }
+        .info-lg {
+            padding: 30px;
+        }
+    }
+    </style>
+    <!--[if mso]>
+        <style type="text/css">
+        body { font-family: Arial, Helvetica, sans-serif !important; }
+        td { font-family: Arial, Helvetica, sans-serif !important; }
+        td * { font-family: Arial, Helvetica, sans-serif !important; }
+        td p { font-family: Arial, Helvetica, sans-serif !important; }
+        td a { font-family: Arial, Helvetica, sans-serif !important; }
+        td span { font-family: Arial, Helvetica, sans-serif !important; }
+        td div { font-family: Arial, Helvetica, sans-serif !important; }
+        td ul li { font-family: Arial, Helvetica, sans-serif !important; }
+        td ol li { font-family: Arial, Helvetica, sans-serif !important; }
+        td blockquote { font-family: Arial, Helvetica, sans-serif !important; }
+        th * { font-family: Arial, Helvetica, sans-serif !important; }
+        </style>
+        <![endif]-->
+</head>
+<body style="font-family:'Inter', Helvetica, Arial, sans-serif; width: 100% !important; height: 100%; margin: 0; padding: 0; -webkit-text-size-adjust: none; background-color: #f4f7fa; color: #4a5566;">
+
+    <div class="preheader" style="display:none !important;visibility:hidden;mso-hide:all;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;"></div>
+
+    <table class="ms-body" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;background-color:#f4f7fa;width:100%;margin:0;padding:0;">
+        <tr>
+            <td align="center" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;">
+
+                <table class="ms-container" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;margin:0;padding:0;">
+                    <tr>
+                        <td align="center" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;">
+
+                            <table class="ms-header" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                                <tr>
+                                    <td height="40" style="font-size:0px;line-height:0px;word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;">
+
+                            <table class="ms-content" width="640" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;width:640px;margin:0 auto;padding:0;background-color:#FFFFFF;border-radius:6px;box-shadow:0 3px 6px 0 rgba(0,0,0,.05);">
+                                <tr>
+                                    <td class="ms-content-body" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;padding:40px 50px;">
+
+                                        <p class="logo" style="margin:0 0 40px 0;line-height:28px;font-weight:600;font-size:21px;text-align:center;">
+                                            <span style="color:#0052e2;font-family:Arial, Helvetica, sans-serif;font-size:35px;vertical-align:bottom;">ArgenVisa</span>
+                                        </p>
+
+                                        <h1 style="margin-top:0;color:#111111;font-size:24px;line-height:36px;font-weight:600;margin-bottom:24px;">¡Hola [[${firstName}]]!</h1>
+
+                                        <p style="color:#4a5566;margin:20px 0;font-size:16px;line-height:28px;">
+                                            Gracias por contratar el servicio <b th:text="${serviceName}">Visa EEUU</b>. Abajo encontrarás las instrucciones a seguir para completar tu trámite.
+                                        </p>
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                                            <tr>
+                                                <td style="padding:20px 0;word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;">
+
+                                                    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                                                        <tr>
+                                                            <td valign="middle" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;">
+                                                                <h3 style="margin-top:0;color:#111111;font-size:18px;line-height:26px;font-weight:600;margin-bottom:24px;">Tu número de orden: [[${idOrder}]]</h3>
+                                                            </td>
+                                                            <td align="right" valign="middle" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;">
+                                                                <h3 style="margin-top:0;color:#111111;font-size:18px;line-height:26px;font-weight:600;margin-bottom:24px;" th:text="${creationDatetime}">01/01/2026</h3>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                    <table class="table" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                                                        <tr>
+                                                            <th align="left" style="font-family:'Inter', Helvetica, Arial, sans-serif;padding:10px 0;color:#85878E;font-size:13px;font-weight:600;line-height:18px;">
+                                                                Descripción
+                                                            </th>
+                                                            <th align="right" style="font-family:'Inter', Helvetica, Arial, sans-serif;padding:10px 0;color:#85878E;font-size:13px;font-weight:600;line-height:18px;">
+                                                                Monto
+                                                            </th>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td valign="middle" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;padding:14px 0;border-top:1px solid #e2e8f0;" th:text="${serviceName}">
+                                                                Visa EEUU
+                                                            </td>
+                                                            <td valign="middle" align="right" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;padding:14px 0;border-top:1px solid #e2e8f0;" th:text="${totalPrice}">
+                                                                100
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Bloque específico de cada servicio: templates/mail/steps/{usa|canada|eta}.html -->
+                                        <th:block th:replace="~{mail/steps/__${stepsTemplate}__ :: steps}"></th:block>
+
+                                        <p style="color:#4a5566;margin-top:20px;margin-bottom:20px;font-size:16px;line-height:28px;">
+                                            Si tenés dudas sobre alguno de los pasos o necesitás ayuda adicional, podés contactarnos directamente a través de
+                                            <a href="mailto:visaparaargentinos@gmail.com" style="color:#0052e2;text-decoration:none;">visaparaargentinos@gmail.com</a>.
+                                        </p>
+
+                                        <table th:if="${couponCode != null}" width="100%" align="center" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:30px;margin-bottom:30px;">
+                                            <tr>
+                                                <td align="center" style="background-color:#f4f7fa;padding:20px;border-radius:6px;">
+                                                    <h2 style="margin-top:0;color:#111111;font-size:20px;line-height:28px;font-weight:600;margin-bottom:16px;">¡Tu cupón de descuento!</h2>
+                                                    <p style="color:#4a5566;margin-top:0;margin-bottom:16px;font-size:16px;line-height:24px;">
+                                                        Usa el siguiente código en tu próxima compra o compartilo con un amigo:
+                                                    </p>
+                                                    <p style="background-color:#438c2e;color:#fff;padding:10px 20px;border-radius:4px;display:inline-block;font-weight:600;font-size:18px;" th:text="${couponCode}">
+                                                        CUPON
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <p style="color:#4a5566;margin:20px 0;font-size:16px;line-height:28px;">Saludos,
+                                            <b> el equipo de ArgenVisa</b>
+                                        </p>
+
+                                        <table width="100%" style="border-collapse:collapse;">
+                                            <tr>
+                                                <td height="20" style="font-size:0px;line-height:0px;word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;">
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="20" style="font-size:0px;line-height:0px;border-top:1px solid #e2e8f0;word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;">
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;">
+
+                            <table class="ms-footer" width="640" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;width:640px;margin:0 auto;">
+                                <tr>
+                                    <td class="ms-content-body" align="center" style="word-break:break-word;font-family:'Inter', Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;padding:40px 50px;">
+                                        <p class="small" style="margin:20px 0;color:#96a2b3;font-size:14px;line-height:21px;">&copy; 2020 ArgenVisa. All rights reserved.</p>
+                                        <p class="small" style="margin:20px 0;color:#96a2b3;font-size:14px;line-height:21px;">
+                                            Buenos Aires, Argentina
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

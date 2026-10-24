@@ -1,7 +1,9 @@
 package com.back_visas.back_visas.service;
 
 import com.back_visas.back_visas.dto.request.CreatePreferenceRequest;
+import com.back_visas.back_visas.dto.request.MailRequestDTO;
 import com.back_visas.back_visas.dto.request.ProcessPaymentRequest;
+import com.back_visas.back_visas.model.Order;
 
 import java.util.Map;
 
@@ -13,5 +15,6 @@ public interface iMercadoPagoService {
 
     public void handleWebhook(String body, Map<String, String> headers) throws Exception;
     public Map<String, Object> verifyPayment(Long paymentId) throws Exception;
-    public String getTemplateIdForService(com.back_visas.back_visas.model.Service service);
+    public String getMailTemplateForService(com.back_visas.back_visas.model.Service service);
+    public MailRequestDTO buildConfirmationMail(Order order);
 }

@@ -4,6 +4,7 @@ import com.back_visas.back_visas.dto.request.CreatePreferenceRequest;
 import com.back_visas.back_visas.dto.request.MailRequestDTO;
 import com.back_visas.back_visas.dto.request.ProcessPaymentRequest;
 import com.back_visas.back_visas.feign.MercadoPagoAPIClient;
+import com.back_visas.back_visas.model.Coupon;
 import com.back_visas.back_visas.model.Order;
 import com.back_visas.back_visas.model.Payment;
 import com.back_visas.back_visas.model.PaymentStatus;
@@ -15,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -27,15 +28,6 @@ public class MercadoPagoService implements iMercadoPagoService {
 
     @Value("${webhook.url}")
     private String urlNotification;
-
-    @Value("${template.id.usa}")
-    private String templateIdUsa;
-
-    @Value("${template.id.ca}")
-    private String templateIdCanada;
-
-    @Value("${template.id.eta}")
-    private String templateIdEta;
 
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
@@ -205,22 +197,7 @@ public class MercadoPagoService implements iMercadoPagoService {
 
             if (payment.getStatus() == PaymentStatus.APPROVED) {
                 try {
-                    MailRequestDTO mailDto = new MailRequestDTO();
-                    mailDto.setNameTo(order.getCustomerName());
-                    mailDto.setTo(order.getCustomerMail());
-                    String templateId = getTemplateIdForService(order.getService());
-                    mailDto.setTemplateId(templateId);
-                    mailDto.setFirstName(order.getCustomerName());
-                    mailDto.setServiceName(order.getService().getServiceName());
-                    mailDto.setIdOrder(order.getIdOrder().toString());
-                    LocalDateTime fecha = order.getCreationDatetime();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    String dateFormat = fecha.format(formatter);
-                    mailDto.setCreationDatetime(dateFormat);
-                    mailDto.setTotalPrice(order.getTotalPrice().toString());
-                    mailDto.setQuantity(order.getQuantity());
-                    mailDto.setCouponCode("MUNDIAL26");
-                    mailService.sendMailWithTemplate(mailDto);
+                    mailService.sendMailWithTemplate(buildConfirmationMail(order));
                 } catch (Exception e) {
                     System.err.println("Error al enviar mail de confirmación: " + e.getMessage());
                 }
@@ -377,19 +354,39 @@ public class MercadoPagoService implements iMercadoPagoService {
         );
     }
 
-    public String getTemplateIdForService(com.back_visas.back_visas.model.Service service) {
+    @Override
+    public MailRequestDTO buildConfirmationMail(Order order) {
+        MailRequestDTO mailDto = new MailRequestDTO();
+        mailDto.setNameTo(order.getCustomerName());
+        mailDto.setTo(order.getCustomerMail());
+        mailDto.setTemplate(getMailTemplateForService(order.getService()));
+        mailDto.setFirstName(order.getCustomerName());
+        mailDto.setServiceName(order.getService().getServiceName());
+        mailDto.setIdOrder(order.getIdOrder().toString());
+        mailDto.setCreationDatetime(order.getCreationDatetime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        mailDto.setTotalPrice(order.getTotalPrice().toString());
+        mailDto.setQuantity(order.getQuantity());
+        // El bloque del cupón solo se muestra si el cupón sigue vigente
+        Coupon coupon = order.getCoupon();
+        boolean couponValid = coupon != null && coupon.isActive()
+                && (coupon.getExpirationDate() == null || !coupon.getExpirationDate().isBefore(LocalDate.now()));
+        mailDto.setCouponCode(couponValid ? coupon.getCouponCode() : null);
+        return mailDto;
+    }
+
+    public String getMailTemplateForService(com.back_visas.back_visas.model.Service service) {
         String serviceName = service.getServiceName().toLowerCase();
 
         // Identificar por nombre del servicio
         if (serviceName.contains("eta")) {
-            return templateIdEta;
+            return MailService.TEMPLATE_ETA;
         } else if (serviceName.contains("canadá") || serviceName.contains("canada")) {
-            return templateIdCanada;
+            return MailService.TEMPLATE_CANADA;
         } else if (serviceName.contains("usa") || serviceName.contains("eeuu") || serviceName.contains("estados unidos")) {
-            return templateIdUsa;
+            return MailService.TEMPLATE_USA;
         }
 
         // Fallback: usar template USA por defecto
-        return templateIdUsa;
+        return MailService.TEMPLATE_USA;
     }
 }

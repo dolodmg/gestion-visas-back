@@ -8,7 +8,7 @@ import java.util.Map;
 public class MailRequestDTO {
         private String to;
         private String nameTo;
-        private String templateId;
+        private String template; // usa | canada | eta
         private String firstName;
         private String serviceName;
         private String idOrder;

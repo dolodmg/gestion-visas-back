@@ -100,18 +100,7 @@ public class MercadoPagoController {
                         .body(Map.of("error", "No hay pagos aprobados para esta orden"));
             }
 
-            MailRequestDTO mailDto = new MailRequestDTO();
-            mailDto.setNameTo(order.getCustomerName());
-            mailDto.setTo(order.getCustomerMail());
-            mailDto.setTemplateId(mercadoPagoService.getTemplateIdForService(order.getService()));
-            mailDto.setFirstName(order.getCustomerName());
-            mailDto.setServiceName(order.getService().getServiceName());
-            mailDto.setIdOrder(order.getIdOrder().toString());
-            mailDto.setCreationDatetime(order.getCreationDatetime().toString());
-            mailDto.setTotalPrice(order.getTotalPrice().toString());
-            mailDto.setCouponCode(order.getCoupon() != null ? order.getCoupon().getCouponCode() : "");
-
-            mailService.sendMailWithTemplate(mailDto);
+            mailService.sendMailWithTemplate(mercadoPagoService.buildConfirmationMail(order));
 
             return ResponseEntity.ok(Map.of("message", "Correo de confirmación reenviado correctamente"));
         } catch (Exception e) {

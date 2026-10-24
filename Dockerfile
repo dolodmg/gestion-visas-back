@@ -1,20 +1,23 @@
-# -------- Etapa 1: build --------
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
+# Build stage
+FROM maven:3.9-eclipse-temurin-17 AS builder
 WORKDIR /app
 
+# Copiar archivos de configuración de Maven
 COPY pom.xml .
-RUN mvn dependency:go-offline
+COPY src ./src
 
-COPY . .
+# Construir el proyecto (esto genera el .jar)
 RUN mvn clean package -DskipTests
 
-# -------- Etapa 2: runtime --------
-FROM eclipse-temurin:17-jdk-alpine
+# Production stage
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
+# Copiar el JAR generado desde el stage anterior
 COPY --from=builder /app/target/*.jar app.jar
 
-# Expone directamente el puerto por defecto de Spring Boot
+# Exponer el puerto de Spring Boot
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","app.jar"]
+# Comando para ejecutar la aplicación
+ENTRYPOINT ["java", "-jar", "app.jar"]

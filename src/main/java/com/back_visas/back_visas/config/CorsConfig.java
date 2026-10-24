@@ -18,7 +18,7 @@ public class CorsConfig {
                         .allowedOriginPatterns(
                                 "http://localhost*",
                                 "http://127.0.0.1*",
-                                "https://argenvisa.online*",
+                                "https://argenvisa.online",
                                 "https://*.mercadopago.com",
                                 "https://*.mercadolibre.com",
                                 "https://api.mercadopago.com"
